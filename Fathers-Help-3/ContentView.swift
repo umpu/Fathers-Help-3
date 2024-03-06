@@ -8,14 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isAnimated = false
+    @State private var toggle = false
     
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Button {
+            withAnimation(.spring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.0)) {
+                toggle.toggle()
+            }
+        } label: {
+            HStack(spacing: -14) {
+                if toggle {
+                    Image(systemName: "play.fill")
+                        .transition(
+                            .scale(toggle ? 0 : 1, anchor: .leading)
+                            .combined(with: .opacity)
+                        )
+                }
+                
+                Image(systemName: "play.fill")
+                
+                if !toggle {
+                    Image(systemName: "play.fill")
+                        .transition(
+                            .scale(toggle ? 1 : 0, anchor: .trailing)
+                            .combined(with: .opacity)
+                        )
+                }
+            }
+            .font(.system(size: 100))
         }
         .padding()
     }
