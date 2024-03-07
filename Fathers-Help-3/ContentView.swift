@@ -13,7 +13,9 @@ struct ContentView: View {
     var body: some View {
         Button {
             withAnimation(.spring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.0)) {
-                toggle.toggle()
+                toggle = true
+            } completion: {
+                toggle = false
             }
         } label: {
             HStack(spacing: -14) {
