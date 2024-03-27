@@ -7,39 +7,47 @@
 
 import SwiftUI
 
+struct ImageView: View {
+    var body: some View {
+        Image(systemName: "play.fill")
+            .renderingMode(.template)
+            .resizable()
+            .scaledToFit()
+    }
+}
+
 struct ContentView: View {
-    @State private var toggle = false
+    @State private var performAnimation: Bool = false
     
     var body: some View {
         Button {
-            withAnimation(.spring(response: 0.5, dampingFraction: 0.5, blendDuration: 0.0)) {
-                toggle = true
-            } completion: {
-                toggle = false
+            if !performAnimation {
+                withAnimation(.spring) {
+                    performAnimation = true
+                } completion: {
+                    performAnimation = false
+                }
             }
         } label: {
-            HStack(spacing: -14) {
-                if toggle {
-                    Image(systemName: "play.fill")
-                        .transition(
-                            .scale(toggle ? 0 : 1, anchor: .leading)
-                            .combined(with: .opacity)
-                        )
-                }
+            GeometryReader { proxy in
+                let width = proxy.size.width / 2
                 
-                Image(systemName: "play.fill")
-                
-                if !toggle {
-                    Image(systemName: "play.fill")
-                        .transition(
-                            .scale(toggle ? 1 : 0, anchor: .trailing)
-                            .combined(with: .opacity)
-                        )
+                HStack(alignment: .center, spacing: 0) {
+                    ImageView()
+                        .frame(width: performAnimation ? width : .zero)
+                        .opacity(performAnimation ? 1 : .zero)
+                    
+                    ImageView()
+                        .frame(width: width)
+                    
+                    ImageView()
+                        .frame(width: performAnimation ? 0.5 : width)
+                        .opacity(performAnimation ? .zero : 1)
                 }
+                .frame(maxWidth: .infinity, alignment: .center)
             }
-            .font(.system(size: 100))
         }
-        .padding()
+        .frame(maxWidth: 62)
     }
 }
 
